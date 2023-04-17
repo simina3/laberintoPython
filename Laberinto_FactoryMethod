@@ -1,0 +1,41 @@
+from abc import ABC, abstractmethod
+
+class Laberinto_FactoryMethod(ABC):
+    @abstractmethod
+    def crear_habitaciones(self):
+        pass
+
+class Laberinto_FM_DosHabitaciones(Laberinto_FactoryMethod):
+    def crear_habitaciones(self):
+        habitacion_norte = Habitacion(1)
+        habitacion_sur = Habitacion(2)
+
+        habitacion_norte.set_lado("norte", Pared())
+        habitacion_norte.set_lado("este", Pared())
+        habitacion_norte.set_lado("sur", habitacion_sur)
+        habitacion_norte.set_lado("oeste", Pared())
+
+        habitacion_sur.set_lado("norte", habitacion_norte)
+        habitacion_sur.set_lado("este", Pared())
+        habitacion_sur.set_lado("sur", Pared())
+        habitacion_sur.set_lado("oeste", Pared())
+
+        return [habitacion_norte, habitacion_sur]
+
+class Habitacion:
+    def __init__(self, numero):
+        self.numero = numero
+        self.lados = {}
+
+    def set_lado(self, direccion, objeto):
+        self.lados[direccion] = objeto
+
+    def get_lado(self, direccion):
+        return self.lados[direccion]
+
+class Pared:
+    pass
+
+# Uso del Factory Method
+laberinto = Laberinto_FM_DosHabitaciones()
+habitaciones = laberinto.crear_habitaciones()
