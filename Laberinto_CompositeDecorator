@@ -1,0 +1,104 @@
+# Implementación de patrón Composite
+class Habitacion:
+    def __init__(self, numero):
+        self.numero = numero
+        self.objetos = []
+        
+    def agregar_objeto(self, objeto):
+        self.objetos.append(objeto)
+        
+    def obtener_objetos(self):
+        return self.objetos
+        
+class Laberinto:
+    def __init__(self):
+        self.habitaciones = {}
+        
+    def agregar_habitacion(self, habitacion):
+        self.habitaciones[habitacion.numero] = habitacion
+        
+    def obtener_habitacion(self, numero):
+        return self.habitaciones.get(numero)
+
+# Implementación de patrón Decorator
+class Objeto:
+    def __init__(self, descripcion):
+        self.descripcion = descripcion
+        
+    def obtener_descripcion(self):
+        return self.descripcion
+        
+class Baul(Objeto):
+    def __init__(self, descripcion, contenido):
+        super().__init__(descripcion)
+        self.contenido = contenido
+        
+    def obtener_descripcion(self):
+        return f"{self.descripcion} con {self.contenido}"
+        
+class Bomba(Baul):
+    def __init__(self, contenido):
+        super().__init__("Baul", contenido)
+        
+class Espada(Objeto):
+    def __init__(self):
+        super().__init__("Espada")
+        
+class Fuego(Objeto):
+    def __init__(self):
+        super().__init__("Fuego")
+
+# Creación del laberinto
+laberinto = Laberinto()
+
+habitacion1 = Habitacion(1)
+habitacion2 = Habitacion(2)
+habitacion3 = Habitacion(3)
+habitacion4 = Habitacion(4)
+
+laberinto.agregar_habitacion(habitacion1)
+laberinto.agregar_habitacion(habitacion2)
+laberinto.agregar_habitacion(habitacion3)
+laberinto.agregar_habitacion(habitacion4)
+
+puerta12 = Objeto("Puerta")
+puerta13 = Objeto("Puerta con llave")
+puerta34 = Objeto("Puerta con bomba")
+puerta42 = Objeto("Puerta")
+
+habitacion1.agregar_objeto(puerta12)
+habitacion1.agregar_objeto(puerta13)
+
+habitacion2.agregar_objeto(puerta42)
+
+habitacion3.agregar_objeto(puerta34)
+
+baul2 = Baul("Baul", Bomba("bomba"))
+habitacion2.agregar_objeto(baul2)
+
+baul3 = Baul("Baul", Espada())
+habitacion3.agregar_objeto(baul3)
+
+habitacion4.agregar_objeto(Fuego())
+
+# Métodos de fabricación necesarios
+def crear_bomba():
+    return Bomba("bomba")
+
+def crear_espada():
+    return Espada()
+
+# Playground o main
+if __name__ == "__main__":
+    print("Descripción del laberinto:\n")
+    for habitacion in laberinto.habitaciones.values():
+        print(f"Habitación {habitacion.numero}:")
+        for objeto in habitacion.obtener_objetos():
+            print(f"- {objeto.obtener_descripcion()}")
+        print()
+    
+    # Ejemplo de uso de los métodos de fabricación
+    objeto1 = crear_bomba()
+    objeto2 = crear_espada()
+    print(f"\nObjeto 1: {objeto1.obtener_descripcion()}")
+    print(f"Objeto 2: {objeto2.obtener_descripcion())
